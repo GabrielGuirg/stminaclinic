@@ -1,1 +1,1 @@
-### St. Mina CLinic App
+### St. Mina Clinic App
