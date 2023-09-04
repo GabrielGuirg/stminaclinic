@@ -4,18 +4,19 @@ import { Button } from 'primereact/button';
 function Layout() {
     return (
       <div className="Layout flex flex-column">
-        HERE IS MY LAYOUT
-        <div className="absolute top-0 right-0"> <a href="login"> <Button label="Click" icon="pi pi-check" /> </a></div>
+        <div className="absolute top-0 right-0">
+          <Link to="login" className="p-2"> <Button type="button" label="Login" link /> </Link>
+        </div>
         <Link to="/" >Home</Link>
-          <Link to="/login" >Login</Link>
-            <Link to="behavioral"> Behavioral</Link>
-              <Link to="dashboard"> Dashboard</Link>
+        <Link to="/login" >Login</Link>
+        <Link to="behavioral"> Behavioral</Link>
+        <Link to="dashboard"> Dashboard</Link>
         <Outlet />
       </div>
     );
   }
   
-  export default Layout;
+export default Layout;
 
 /* This controls the main page UI of the layout */ 
 /* The changes to Link to = makes the port name different each time you change it */
