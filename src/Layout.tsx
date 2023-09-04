@@ -5,10 +5,11 @@ function Layout() {
     return (
       <div className="Layout flex flex-column">
         HERE IS MY LAYOUT
+        <div className="absolute top-0 right-0"> <a href="login"> <Button label="Click" icon="pi pi-check" /> </a></div>
         <Link to="/" >Home</Link>
-        <Link to="/login" >Login</Link>
-        <Link to="behavioral"> Behavioral</Link>
-        <Link to="dashboard"> Dashboard</Link>
+          <Link to="/login" >Login</Link>
+            <Link to="behavioral"> Behavioral</Link>
+              <Link to="dashboard"> Dashboard</Link>
         <Outlet />
       </div>
     );
@@ -18,3 +19,5 @@ function Layout() {
 
 /* This controls the main page UI of the layout */ 
 /* The changes to Link to = makes the port name different each time you change it */
+/* I noticed in my href logjn that the port if you type capital Login or login it 
+goes straight still to login page. */
