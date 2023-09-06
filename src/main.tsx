@@ -13,7 +13,6 @@ import Behavioral from './Behavioral/Behavioral';
 import Dashboard from './Dashboard/Dashboard';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
     <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -23,7 +22,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <Route path="login" element={<Login />} />
           <Route path="Dashboard" element={<Dashboard />} /> 
         </Routes>
-          
-      </BrowserRouter>
-  </React.StrictMode>
+    </BrowserRouter>
 )

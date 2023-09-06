@@ -1,24 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Button } from 'primereact/button';
-import { useNavigate } from 'react-router-dom';
 
 function Layout() {
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    // Redirect to the login page
-    navigate('/login');
-  };
 
   return (
     <div className="Layout flex flex-column">
       <div className="absolute top-0 right-0">
-        <Button type="button" label="Login" link onClick={handleLoginClick} />
+        <Link to="login">
+          <Button type="button" label="Login" link />
+        </Link>
       </div>
       <Link to="/">Home</Link>
       <Link to="/login">Login</Link>
       <Link to="behavioral">Behavioral</Link>
       <Link to="dashboard">Dashboard</Link>
+      <Outlet />
     </div>
   );
 }
