@@ -43,8 +43,8 @@ function Home() {
      }} label="loading" />
 
      {
-        names.map((n) => <div key={n.id}>
-            {n['name']} <Button onClick={() => deleteName(n.id)} label="delete" link></Button>
+        names.map((n: {name: string, id: string}) => <div key={n.id}>
+            {n.name} <Button onClick={() => deleteName(n.id)} label="delete" link></Button>
         </div>)
      }
     </div>
