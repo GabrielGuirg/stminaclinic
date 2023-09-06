@@ -1,22 +1,51 @@
-import { useRef } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './Layout';
+import Home from './Home/Home';
+import Behavioral from './Behavioral/Behavioral';
+import Dashboard from './Dashboard/Dashboard';
+import Login from './login/Login';
+import { Toast, ToastMessage } from 'primereact/toast';
+import { useEffect, useRef } from 'react';
+import { generalStore } from './stores/generalStore';
+import { BlockUI } from 'primereact/blockui';
+import { ProgressSpinner } from 'primereact/progressspinner';
+
 import './App.css';
-import { Toast } from 'primereact/toast';
-import { Button } from 'primereact/button';
+import { FirestoreProvider, useFirebaseApp } from 'reactfire';
+import { getFirestore } from 'firebase/firestore';
 
 function App() {
-  let toast = useRef<Toast>(null);
+  const toast = useRef<Toast>(null);
+  const toasts = generalStore((state: any) => state.toasts);
+  const appLoading = generalStore((state: any) => state.appLoading);
+  const app = useFirebaseApp();
 
-    const show = () => {
-      toast.current?.show({ severity: 'info', summary: 'Info', detail: 'Message Content' });
-    };
-
+  useEffect(() => {
+    if (toasts != null) {
+      for (const t of toasts) {
+        toast.current?.show(t as ToastMessage);
+      }
+    }
+  }, [toasts]);
+  const firestoreInstance = getFirestore(app);
+  
   return (
-    <div className="App">
-      Home Page
-      
-      <Toast ref={toast} />
-            <Button onClick={show} label="Show" />
-    </div>
+        <div className="app">
+            <BlockUI blocked={appLoading} fullScreen ></BlockUI>
+            <FirestoreProvider sdk={firestoreInstance}>
+              <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Layout />}>
+                      <Route index element={<Home />} />
+                      <Route path="Behavioral" element={<Behavioral />} /> 
+                    </Route>
+                    <Route path="login" element={<Login />} />
+                    <Route path="Dashboard" element={<Dashboard />} /> 
+                  </Routes>
+              </BrowserRouter>
+            </FirestoreProvider>
+            <Toast ref={toast} />
+        </div>
   );
 }
 

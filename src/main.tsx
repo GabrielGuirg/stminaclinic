@@ -5,22 +5,12 @@ import 'primeicons/primeicons.css'; //icons
 import 'primeflex/primeflex.css'; // flex
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from './Layout';
-import Login from './login/Login';
 import './index.css'
-import Behavioral from './Behavioral/Behavioral';
-import Dashboard from './Dashboard/Dashboard';
+import { firebaseConfig } from './library/common';
+import { FirebaseAppProvider } from 'reactfire';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<App />} />
-            <Route path="Behavioral" element={<Behavioral />} /> 
-          </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="Dashboard" element={<Dashboard />} /> 
-        </Routes>
-    </BrowserRouter>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+      <App />
+    </FirebaseAppProvider>
 )
