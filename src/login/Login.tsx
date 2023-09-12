@@ -1,9 +1,15 @@
+import { Toast } from 'primereact/toast';
+import { useRef } from 'react'
+
 function Login() {
-    return (
-      <div className="Login">
-        This Login Page
-      </div>
-    );
-  }
-  
-  export default Login;
+  const toast = useRef<Toast>(null);
+
+  return (
+    <div className="Login">
+      This is the Login Page
+      <Toast ref={toast} />
+    </div>
+  );
+}
+
+export default Login;
