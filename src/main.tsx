@@ -14,3 +14,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <App />
     </FirebaseAppProvider>
 )
+
+background: name;

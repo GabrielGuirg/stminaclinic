@@ -1,5 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Button } from 'primereact/button';
+import './index.css'
 
 function Layout() {
 

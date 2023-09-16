@@ -1,12 +1,47 @@
 import { Toast } from 'primereact/toast';
-import { useRef } from 'react'
+import { useRef, useState } from 'react';
+import { Card } from 'primereact/card';
+        
 
 function Login() {
   const toast = useRef<Toast>(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    // Perform your login logic here, e.g., send the username and password to a server
+    // and handle the response.
+
+    // For demonstration purposes, we'll just display the entered values in a toast.
+    toast.current?.show({
+      severity: 'info',
+      summary: 'Login Information',
+      detail: `Username: ${username}, Password: ${password}`,
+    });
+  };
 
   return (
     <div className="Login">
-      This is the Login Page
+      <div className="login-box">
+        <h2>Login Page</h2>
+        <div>
+          <label>Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button onClick={handleLogin}>Login</button>
+      </div>
       <Toast ref={toast} />
     </div>
   );
