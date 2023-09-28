@@ -9,16 +9,17 @@ import { useEffect, useRef } from 'react';
 import { generalStore } from './stores/generalStore';
 import { BlockUI } from 'primereact/blockui';
 import { ProgressSpinner } from 'primereact/progressspinner';
-
 import './App.css';
-import { FirestoreProvider, useFirebaseApp } from 'reactfire';
+import { AuthProvider, FirestoreProvider, useFirebaseApp } from 'reactfire';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 
 function App() {
   const toast = useRef<Toast>(null);
   const toasts = generalStore((state: any) => state.toasts);
   const appLoading = generalStore((state: any) => state.appLoading);
   const app = useFirebaseApp();
+  const auth = getAuth(app);
 
   useEffect(() => {
     if (toasts != null) {
@@ -31,6 +32,7 @@ function App() {
   
   return (
         <div className="app">
+           <AuthProvider sdk={auth}>
             <BlockUI blocked={appLoading} fullScreen ></BlockUI>
             <FirestoreProvider sdk={firestoreInstance}>
               <BrowserRouter>
@@ -44,6 +46,7 @@ function App() {
                   </Routes>
               </BrowserRouter>
             </FirestoreProvider>
+            </AuthProvider>
             <Toast ref={toast} />
         </div>
   );

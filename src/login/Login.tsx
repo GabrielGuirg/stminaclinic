@@ -1,6 +1,7 @@
 import { Toast } from 'primereact/toast';
 import { useRef, useState } from 'react';
 import { Card } from 'primereact/card';
+import './loginstyle.css'
         
 
 function Login() {
@@ -14,15 +15,16 @@ function Login() {
 
     // For demonstration purposes, we'll just display the entered values in a toast.
     toast.current?.show({
-      severity: 'info',
-      summary: 'Login Information',
-      detail: `Username: ${username}, Password: ${password}`,
+      severity: 'success',
+      summary: 'Successful',
     });
   };
 
   return (
     <div className="Login">
       <div className="login-box">
+        <div className="cardstyle">
+        <Card title ="St. Mina Clinic Login" className="md:w-25rem md:h-25rem">
         <h2>Login Page</h2>
         <div>
           <label>Username:</label>
@@ -41,9 +43,12 @@ function Login() {
           />
         </div>
         <button onClick={handleLogin}>Login</button>
+        </Card>
+        </div>
       </div>
       <Toast ref={toast} />
     </div>
+    
   );
 }
 
