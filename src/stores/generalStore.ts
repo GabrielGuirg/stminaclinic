@@ -2,11 +2,17 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, quer
 import { ToastMessage } from 'primereact/toast'
 import { create } from 'zustand'
 import { firebaseApp } from '../library/common';
+import { UserCredential } from 'firebase/auth';
 
 export const generalStore = create((set, get: any) => ({
   toasts: null,
   appLoading: false,
   names: [],
+  user: {
+    accessToken: localStorage.getItem('accessToken'),
+    uid: localStorage.getItem('uid'),
+    email: localStorage.getItem('email')
+  },
   sendToasts: (allToasts: ToastMessage[]) => {
     set((state: any) => ({
         ...state, // state here expands states
@@ -55,5 +61,20 @@ export const generalStore = create((set, get: any) => ({
     const docRef = doc(db, "names", id);
     await deleteDoc(docRef);
     get().getNames();
+  },
+  setUsers: async (res: UserCredential) => {
+    localStorage.setItem('accessToken', await res.user.getIdToken());
+    localStorage.setItem('email', res?.user?.email || "");
+    localStorage.setItem('uid', res?.user?.uid);
+  },
+  isLoggedIn: () => {
+    if (localStorage.getItem('accessToken')) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  logout: () => {
+    localStorage.clear();
   }
 }));

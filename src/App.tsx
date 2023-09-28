@@ -20,6 +20,7 @@ function App() {
   const appLoading = generalStore((state: any) => state.appLoading);
   const app = useFirebaseApp();
   const auth = getAuth(app);
+  const isLoggedIn = generalStore((state: any) => state.isLoggedIn);
 
   useEffect(() => {
     if (toasts != null) {
@@ -29,7 +30,6 @@ function App() {
     }
   }, [toasts]);
   const firestoreInstance = getFirestore(app);
-  
   return (
         <div className="app">
            <AuthProvider sdk={auth}>
@@ -37,12 +37,13 @@ function App() {
             <FirestoreProvider sdk={firestoreInstance}>
               <BrowserRouter>
                   <Routes>
+                    {isLoggedIn() && <Route path="Dashboard" element={<Dashboard />} />}
+                    <Route path="login" element={<Login />} />
                     <Route path="/" element={<Layout />}>
                       <Route index element={<Home />} />
                       <Route path="Behavioral" element={<Behavioral />} /> 
+                      <Route path='*' element={<Home />}/>
                     </Route>
-                    <Route path="login" element={<Login />} />
-                    <Route path="Dashboard" element={<Dashboard />} /> 
                   </Routes>
               </BrowserRouter>
             </FirestoreProvider>

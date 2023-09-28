@@ -1,3 +1,7 @@
+:root {
+    background-color: gray;
+}
+
 .cardstyle {
     display: flex;
     justify-content: center;
