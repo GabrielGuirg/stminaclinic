@@ -6,6 +6,7 @@ import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
 import { UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { useAuth } from 'reactfire';
+import { Image } from 'primereact/image';
 
 import './login.css'
 
@@ -70,8 +71,10 @@ function Login() {
     <div className="Login">
       <div className="login-box">
         <div className="cardstyle">
-        <Card title ="St. Mina Clinic Login" className="md:w-25rem md:h-40rem">
-        <h2>Login Page</h2>
+            <Card title ="St. Mina Clinic Login" className="md:w-25rem md:h-40rem">
+              <div className="stmina">
+            <Image src="https://stminaclinic.org/assets/st_mina.ico" alt="Image" width="160"/>
+              </div>
         <Formik
           initialValues={{ email: '', password: '' }}
             validate={(values: any) => {
@@ -129,6 +132,7 @@ function Login() {
         </div>
       </div>
     </div>
+   
     
   );
 }

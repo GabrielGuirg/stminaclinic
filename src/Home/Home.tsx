@@ -1,52 +1,84 @@
+import './Home.css';
+import { InputText } from 'primereact/inputtext';
+import React, { useState } from "react";
+import { Calendar } from 'primereact/calendar';
+import { RadioButton } from 'primereact/radiobutton';
+import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { generalStore } from '../stores/generalStore';
-import { InputText } from 'primereact/inputtext';
-import { useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { Image } from 'primereact/image';
+        
 
 function Home() {
-    const sendToasts = generalStore((state: any) => state.sendToasts);
-    const setLoading = generalStore((state: any) => state.setLoading);
-    const add = generalStore((state: any) => state.addName);
-    const names = generalStore((state: any) => state.names);
-    const getNames = generalStore((state: any) => state.getNames);
-    const deleteName = generalStore((state: any) => state.deleteName)
-    const [value, setValue] = useState<string>('');
+  const [date, setDate] = useState('');
+  const [checked, setChecked] = useState('');
+  const [patient, setPatient] = useState(null);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        getNames();
-    }, [])
-    console.log(names);
-    
-    const show = () => {
-        sendToasts([
-            {severity:'success', summary: 'Success', detail:'Message Content', life: 3000},
-            {severity:'error', summary: 'Error', detail:'Message Content', life: 3000}
-        ]);
-    };
+  const logout = generalStore((state: any) => state.logout);
+
+  const patientValid = [
+    { label: "Yes, I am a new patient" },
+    { label: "No, I am already a patient" }
+  ];
 
   return (
-    <div className="Home">
-      Home Page
-    <InputText value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)} />
-     <Button onClick={show} label="Show" />
-     <Button onClick={() => {
-        add(value);
-     }} label="add" />
-
-     <Button onClick={() => {
-        console.log('clicked');
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 3000);
-     }} label="loading" />
-
-     {
-        names.map((n: {name: string, id: string}) => <div key={n.id}>
-            {n.name} <Button onClick={() => deleteName(n.id)} label="delete" link></Button>
-        </div>)
-     }
+    <div >
+      <Button label='Logout' onClick={() => {
+        logout();
+        navigate('/');
+      }} />
+      <div className="stmina">
+      <Image src="https://stminaclinic.org/assets/st_mina.ico" alt="Image" width="160"/>
+      </div>
+      <h1>St Mina Clinic Sign Up</h1>
+      <div className="Info">
+        <div className="textbox-container">
+          <div className="label">First Name</div>
+          <InputText keyfilter="alpha" placeholder="First Name" />
+        </div>
+        <div className="textbox-container">
+          <div className="label">Last Name</div>
+          <InputText keyfilter="alpha" placeholder="Last Name" />
+        </div>
+        <div className="textbox-container">
+          <div className="label">Phone Number</div>
+          <InputText keyfilter="num" placeholder="Phone Number" />
+        </div>
+        <div className="textbox-container">
+          <div className="label">Email Address</div>
+          <InputText keyfilter="email" placeholder="Email Address" />
+        </div>
+        <div className="textbox-container">
+          <div className="label">Date of Birth</div>
+          <Calendar value={date} onChange={(e) => setDate(e.value)} showIcon placeholder="Date of Birth"/>
+        </div>
+        <div className="address">
+          <div className="label">Address</div>
+          <InputText placeholder="Address" />
+        </div>
+        <div className="address">
+          <div className="label">City</div>
+          <InputText keyfilter='alpha' placeholder="City" />
+        </div>
+        <div className="address">
+          <div className="label">Zip Code</div>
+          <InputText keyfilter='num' placeholder="Zip Code" />
+        </div>
+        <div className="address">
+          <RadioButton value={checked} onChange={(e) => setChecked(e.value)}/>
+          <text className="check">Check if you need to ask questions to office staff and no doctor visits needed.</text>
+        </div>
+        <div className="patient">
+          <div className="label">Are you a new patient?</div>
+          <Dropdown value={patient} onChange={(e) => setPatient(e.value)} options={patientValid} placeholder="Select One" />
+        </div>
+        <div className="reserving">
+          <div className="resizeButton"></div>
+        <Button label="Reserve a spot" severity="info" rounded />
+        </div>
+      </div>
     </div>
   );
 }

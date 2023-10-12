@@ -9,3 +9,14 @@
     height: 100vh;   
 }
 
+.stmina {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.p-card-title {
+    text-align: center;
+} /* Embedded in Card componentry which allows to style the title of the card  
+
