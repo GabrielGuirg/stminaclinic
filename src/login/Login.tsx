@@ -75,59 +75,59 @@ function Login() {
               <div className="stmina">
             <Image src="https://stminaclinic.org/assets/st_mina.ico" alt="Image" width="160"/>
               </div>
-        <Formik
-          initialValues={{ email: '', password: '' }}
-            validate={(values: any) => {
-              const errors = {};
-              if (!values.email) {
-                errors.email = 'Required';
-              } else if (
-                !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-              ) {
-                errors.email = 'Invalid email address';
-              }
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting }) => {
-              login(values);
-              setSubmitting(false);
-            }}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            /* and other goodies */
-          }) => (
-            <form onSubmit={handleSubmit} className="flex flex-column">
-              <div className="flex flex-column gap-2">
-                <label htmlFor="email">Email</label>
-                <InputText type="email" 
-                  className={classNames({ 'p-invalid': errors.email && touched.email && errors.email })}
-                  name="email" onChange={handleChange} onBlur={handleBlur} value={values.email} />
-                  <small color='red'>{errors.email && touched.email && errors.email}</small>
-              </div>
-              <div className="flex flex-column gap-2">
-                <label htmlFor='password'>Password</label>
-                <InputText
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  className={classNames({ 'p-invalid': errors.password && touched.password && errors.password })}
-                />
-                <small color='red'>{errors.password && touched.password && errors.password}</small>
-              </div>
-              <br/>
-              <Button label="Login" type="submit" disabled={isSubmitting}></Button>
-          </form>
-          )}
-        </Formik>
+            <Formik
+              initialValues={{ email: '', password: '' }}
+                validate={(values: any) => {
+                  const errors = {};
+                  if (!values.email) {
+                    errors.email = 'Required';
+                  } else if (
+                    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                  ) {
+                    errors.email = 'Invalid email address';
+                  }
+                  return errors;
+                }}
+                onSubmit={(values, { setSubmitting }) => {
+                  login(values);
+                  setSubmitting(false);
+                }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                /* and other goodies */
+              }) => (
+                <form onSubmit={handleSubmit} className="flex flex-column">
+                  <div className="flex flex-column gap-2">
+                    <label htmlFor="email">Email</label>
+                    <InputText type="email" 
+                      className={classNames({ 'p-invalid': errors.email && touched.email && errors.email })}
+                      name="email" onChange={handleChange} onBlur={handleBlur} value={values.email} />
+                      <small color='red'>{errors.email && touched.email && errors.email}</small>
+                  </div>
+                  <div className="flex flex-column gap-2">
+                    <label htmlFor='password'>Password</label>
+                    <InputText
+                      type="password"
+                      name="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      className={classNames({ 'p-invalid': errors.password && touched.password && errors.password })}
+                    />
+                    <small color='red'>{errors.password && touched.password && errors.password}</small>
+                  </div>
+                  <br/>
+                  <Button label="Login" type="submit" disabled={isSubmitting}></Button>
+              </form>
+              )}
+            </Formik>
         </Card>
         </div>
       </div>
