@@ -1,0 +1,9 @@
+.content {
+    display: block; /* Make it a block-level element to appear above the input */
+    text-align: center; /* Optional: Center the label horizontally */
+    margin-bottom: 10px; /* Optional: Add some spacing between the label and the input */
+  }
+
+.BehavioralEvent {
+    font-weight: bold;
+}

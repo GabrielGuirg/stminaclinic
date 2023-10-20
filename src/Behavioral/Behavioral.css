@@ -1,0 +1,51 @@
+.textbox-container {
+    margin-bottom: 10px; /* Adjust the value as needed */
+    margin-left: 100px;
+    margin-top: 15px;  
+    padding: 20px;
+  }
+
+.address {
+    display: inline-block;
+    margin-left: 100px;
+    padding: 20px;
+  }
+
+.check {
+  margin-left: 20px;
+}
+
+.patient {
+  margin-bottom: 10px; /* Adjust the value as needed */
+  margin-left: 100px;
+  margin-top: 15px;  
+  padding: 20px;
+}
+
+.reserving {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Increase the width of the button */
+.reserving .p-button {
+  width: 500px; /* Adjust the width as needed */
+}
+
+.stmina {
+  text-align: center;
+}
+
+h1 {
+  color: rgb(53, 53, 125);
+  text-align: center;
+}
+
+.p-inputtext {
+  width: 90%; /* Adjust the percentage as needed */
+  max-width: 100%; /* Ensurfe it doesn't exceed the container width */
+}
+
+
+
+
