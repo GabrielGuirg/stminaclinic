@@ -1,6 +1,6 @@
 import './Home.css';
 import { InputText } from 'primereact/inputtext';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar } from 'primereact/calendar';
 import { RadioButton } from 'primereact/radiobutton';
 import { Dropdown } from 'primereact/dropdown';
@@ -25,6 +25,19 @@ function Home() {
     { label: "Yes, I am a new patient" },
     { label: "No, I am already a patient" }
   ];
+
+  
+  const getOpenEvents = generalStore((state: any) => state.getOpenEvents);
+  const events = generalStore((state: any) => state.events);
+
+  useEffect(() => {
+    getOpenEvents();
+    console.log(events);
+    events.forEach((element: any) => {
+      console.log(new Date(element.date.seconds * 1000))
+    });
+  }, []);
+  console.log(events);
 
   return (
     <div >
@@ -181,7 +194,7 @@ function Home() {
                   console.log(checked);
                   setChecked(e.value);
                 }}  name="noDoctorRequired" />
-                <text className="check">Check if you need to ask questions to office staff and no doctor visits needed.</text>
+                <div className="check">Check if you need to ask questions to office staff and no doctor visits needed.</div>
               </div>
               <div className="patient flex flex-column">
                 <div className="label">Are you a new patient?</div>

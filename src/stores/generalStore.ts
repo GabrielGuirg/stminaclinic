@@ -3,16 +3,20 @@ import { ToastMessage } from 'primereact/toast'
 import { create } from 'zustand'
 import { firebaseApp } from '../library/common';
 import { UserCredential } from 'firebase/auth';
+import { ReactElement } from 'react';
 
 export const generalStore = create((set, get: any) => ({
   toasts: null,
   appLoading: false,
-  names: [],
+  events: [],
   user: {
     accessToken: localStorage.getItem('accessToken'),
     uid: localStorage.getItem('uid'),
     email: localStorage.getItem('email')
   },
+  sideBars: [],
+  sideBarOpen: false,
+  sideBarLength: 0,
   sendToasts: (allToasts: ToastMessage[]) => {
     set((state: any) => ({
         ...state, // state here expands states
@@ -25,30 +29,27 @@ export const generalStore = create((set, get: any) => ({
         appLoading: val
     }));
   },
-  addName: async (val: string) => {
+  addEvent: async (val: {name: String, desiredAttendance: number, isBehavioral: boolean, date: Date}) => {
     set((state: any) => ({
         ...state,
         appLoading: true
     }));
     const db = getFirestore(firebaseApp);
-    const docRef = collection(db, "names");
-    const res = await addDoc(docRef, {
-        name: val
-    });
-    console.log(res);
+    const docRef = collection(db, "events");
+    const res = await addDoc(docRef, val);
     set((state: any) => ({
         ...state,
         appLoading: false
     }));
-    get().getNames();
+    get().getEvents();
   },
-  getNames: async () => {
+  getEvents: async () => {
     const db = getFirestore(firebaseApp);
-    const docRef = collection(db, "names");
+    const docRef = collection(db, "events");
     const res = await getDocs(query(docRef));
     set((state: any) => ({
         ...state,
-        names: res.docs.map((n) => {
+        events: res.docs.map((n) => {
             return {    
                 ...n.data(),
                 id: n.id
@@ -56,11 +57,26 @@ export const generalStore = create((set, get: any) => ({
         })
     }));
   },
-  deleteName: async (id: string) => {
+  deleteEvent: async (id: string) => {
     const db = getFirestore(firebaseApp);
-    const docRef = doc(db, "names", id);
+    const docRef = doc(db, "events", id);
     await deleteDoc(docRef);
-    get().getNames();
+    get().getEvents();
+  },
+  getOpenEvents: async () => {
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, "events");
+    const res = await getDocs(query(docRef));
+    set((state: any) => ({
+        ...state,
+        events: res.docs.map((n) => {
+            return {    
+                ...n.data(),
+                date: new Date(n.data().date.seconds * 1000),
+                id: n.id
+            }
+        })
+    }));
   },
   setUsers: async (res: UserCredential) => {
     localStorage.setItem('accessToken', await res.user.getIdToken());
@@ -76,5 +92,51 @@ export const generalStore = create((set, get: any) => ({
   },
   logout: () => {
     localStorage.clear();
+  },
+  checkSideBar: () => {
+    if (get().sideBars.length > 0) {
+      set((state: any) => ({
+        ...state,
+        sideBarOpen: true
+      }));
+    } else {
+      set((state: any) => ({
+        ...state,
+        sideBarOpen: false
+      }));
+    }
+  },
+  addSideBar: (page: ReactElement) => {
+    const tempSideBar = get().sideBars;
+    tempSideBar.push(page);
+    console.log(tempSideBar);
+    set((state: any) => ({
+      ...state,
+      sideBars: tempSideBar,
+      sideBarOpen: true,
+      sideBarLength: tempSideBar.length
+    }));
+    get().checkSideBar();
+    
+  },
+  popSideBar: () => {
+    const tempSideBar = get().sideBars;
+    tempSideBar.splice(tempSideBar.length - 1, 1);
+    set((state: any) => ({
+      ...state,
+      sideBars: tempSideBar,
+      sideBarLength: tempSideBar.length
+    }));
+    get().checkSideBar();
+  },
+  clearSideBar: () => {
+    set((state: any) => (
+      {
+        ...state,
+        sideBarOpen: [],
+        sideBarLength: 0
+      }
+    ));
+    get().checkSideBar()
   }
 }));
