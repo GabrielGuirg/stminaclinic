@@ -2,3 +2,38 @@
     display: block; /* Make it a block-level element to appear above the input */
     margin-bottom: 10px; /* Optional: Add some spacing between the label and the input */
   }
+
+  .grid-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .grid-table th, .grid-table td {
+    border: 1px solid #855151;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .grid-table th {
+    background-color: #643030;
+  }
+  
+  .grid-table tr:nth-child(even) {
+    background-color: #874b4b;
+  }
+  
+  .grid-table tr:nth-child(odd) {
+    background-color: #692e2e;
+  }
+  
+  .grid-table tr:hover {
+    background-color: #d0c8c8;
+  }
+  
+  /* Define styles for the action buttons or icons inside table cells
+  .grid-table .action-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  } */
+  
