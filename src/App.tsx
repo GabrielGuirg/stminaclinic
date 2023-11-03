@@ -13,6 +13,8 @@ import './App.css';
 import { AuthProvider, FirestoreProvider, useFirebaseApp } from 'reactfire';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import { ConfirmPopup } from 'primereact/confirmpopup';
 
 function App() {
   const toast = useRef<Toast>(null);
@@ -49,6 +51,9 @@ function App() {
             </FirestoreProvider>
             </AuthProvider>
             <Toast ref={toast} />
+            <ConfirmDialog />
+            <ConfirmPopup />
+
         </div>
   );
 }

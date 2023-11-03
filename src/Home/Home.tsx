@@ -1,4 +1,4 @@
-import './Home.css';
+// import './Home.css';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from "react";
 import { Calendar } from 'primereact/calendar';
@@ -6,20 +6,27 @@ import { RadioButton } from 'primereact/radiobutton';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { generalStore } from '../stores/generalStore';
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import { Image } from 'primereact/image';
 import { classNames } from 'primereact/utils';
 import { Formik } from 'formik';
 import { InputSwitch } from 'primereact/inputswitch';
+import { SelectButton } from 'primereact/selectbutton';
+import { ProgressSpinner } from 'primereact/progressspinner';
+
         
 
 function Home() {
   const [date, setDate] = useState('');
   const [checked, setChecked] = useState(false);
   const [patient, setPatient] = useState(null);
+  const [defaultEventId, setDefaultEventId] = useState(null);
+  const [isMainPageLoading, setIsMainPageLoading] = useState(true);
+  
   const navigate = useNavigate();
 
   const logout = generalStore((state: any) => state.logout);
+  const addPatientToEvent = generalStore((state: any) => state.addPatientToEvent);
 
   const patientValid = [
     { label: "Yes, I am a new patient" },
@@ -32,12 +39,14 @@ function Home() {
 
   useEffect(() => {
     getOpenEvents();
-    console.log(events);
-    events.forEach((element: any) => {
-      console.log(new Date(element.date.seconds * 1000))
-    });
   }, []);
-  console.log(events);
+
+  useEffect(() => {
+    if (events.length > 0) {
+      setDefaultEventId(events[0].id);
+    }
+    setIsMainPageLoading(false);
+  }, [events]);
 
   return (
     <div >
@@ -48,9 +57,14 @@ function Home() {
       <div className="stmina">
       <Image src="https://stminaclinic.org/assets/st_mina.ico" alt="Image" width="160"/>
       </div>
+      {defaultEventId == null && isMainPageLoading && <ProgressSpinner  />}
+      {defaultEventId == null && !isMainPageLoading && <div>
+        Sorry, No Open Spots Available
+      </div>}
       <h1>St Mina Clinic Sign Up</h1>
-      <Formik
-          initialValues={{ 
+      {defaultEventId != null && !isMainPageLoading && <Formik
+          initialValues={{
+            'eventId': defaultEventId,
             "firstName": '',
             "lastName": '',
             "phone": '',
@@ -85,10 +99,11 @@ function Home() {
                 errors.phone = 'Phone number is required';
               }
               // if (!values.date) {
-              //   errors.date = 'Required';
-              // } else if (!/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/) {
-              //   errors.date = "Date of birth required";
-              // }
+              //  errors.date = 'Required';
+              //  } 
+              //  else if (!/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/) {
+              //    errors.date = "Date of birth required";
+              //  }
               if (!values.address) {
                 errors.address = 'Address Required';
               } 
@@ -103,8 +118,10 @@ function Home() {
               return errors;
             }}
                 
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
               console.log(values);
+              const result = await addPatientToEvent(values, values.eventId);
+              console.log(result.id);
               setSubmitting(false);
             }}
         >
@@ -119,6 +136,16 @@ function Home() {
             /* and other goodies */
           }) => (
             <form onSubmit={handleSubmit} className="flex flex-column">
+              <div className="textbox-containter flex flex-column">
+                <div className="label">Select Appointment Date *</div>
+                <SelectButton unselectable={false} value={values.eventId} onChange={handleChange} name="eventId" optionLabel="date" options={events.map((e: any) => {
+                  return {
+                    'name': e.name,
+                    'value': e.id,
+                    'date': e.date.toDateString()
+                  };
+                })} />
+              </div>
               <div className="textbox-container flex flex-column">
                 <div className="label">First Name</div>
                 <InputText keyfilter="alpha" type="text" name="firstName" placeholder="First Name" 
@@ -205,7 +232,7 @@ function Home() {
               </div>
           </form>
           )}
-        </Formik>
+        </Formik>}
     </div>
   );
 }

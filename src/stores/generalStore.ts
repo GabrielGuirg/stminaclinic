@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, updateDoc } from 'firebase/firestore';
 import { ToastMessage } from 'primereact/toast'
 import { create } from 'zustand'
 import { firebaseApp } from '../library/common';
@@ -43,6 +43,46 @@ export const generalStore = create((set, get: any) => ({
     }));
     get().getEvents();
   },
+  addPatientToEvent: async (val: any, eventId: string) => {
+    set((state: any) => ({
+      ...state,
+      appLoading: true
+    }));
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, `clinic/${eventId}/patients`);
+    const res = await addDoc(docRef, val);
+    console.log(res);
+    console.log(res.id);
+    if (res.id) {
+      await get().calcEventPatient('clinic', eventId);
+      get().sendToasts([{
+        severity: 'success',
+        summary: 'Spot reserved! Thank you',
+      }]);
+    }
+    set((state: any) => ({
+      ...state,
+      appLoading: false
+    }));
+    get().getEvents();
+    return res;
+  },
+  calcEventPatient: async (type: string, eventId: string) => {
+    const db = getFirestore(firebaseApp);
+    console.log(type, eventId);
+    console.log(`${type}/${eventId}/patients`);
+    const docRef = collection(db, `${type}/${eventId}/patients`);
+    const res = await getDocs(query(docRef));
+    console.log(res);
+    const docEventRef = collection(db, `events`);
+    const resEvent = await doc(docEventRef, eventId);
+    const resEventData = await getDoc(resEvent);
+    console.log(resEvent);
+    updateDoc(resEvent, {
+      'totalPatient': res.size,
+      'closed': resEventData?.data()?.desiredAttendance < res.size
+    });
+  },
   getEvents: async () => {
     const db = getFirestore(firebaseApp);
     const docRef = collection(db, "events");
@@ -50,8 +90,9 @@ export const generalStore = create((set, get: any) => ({
     set((state: any) => ({
         ...state,
         events: res.docs.map((n) => {
-            return {    
+            return {
                 ...n.data(),
+                date: new Date(n.data().date.seconds * 1000),
                 id: n.id
             }
         })
@@ -60,7 +101,11 @@ export const generalStore = create((set, get: any) => ({
   deleteEvent: async (id: string) => {
     const db = getFirestore(firebaseApp);
     const docRef = doc(db, "events", id);
+    const docRefFolder = doc(db, "clinic", id);
+    const docRefFolder2 = doc(db, "behavioral", id);
     await deleteDoc(docRef);
+    await deleteDoc(docRefFolder);
+    await deleteDoc(docRefFolder2);
     get().getEvents();
   },
   getOpenEvents: async () => {
