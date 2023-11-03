@@ -1,5 +1,5 @@
 :root {
-    background-color: gray;
+    background-color: #e8d5c0;
 }
 
 .cardstyle {
@@ -18,5 +18,10 @@
 
 .p-card-title {
     text-align: center;
-} /* Embedded in Card componentry which allows to style the title of the card  
+}
+
+.info {
+    color: rgb(0, 0, 0);
+}
+
 

@@ -105,14 +105,14 @@ function Login() {
               }) => (
                 <form onSubmit={handleSubmit} className="flex flex-column">
                   <div className="flex flex-column gap-2">
-                    <label htmlFor="email">Email</label>
+                    <label className='info' htmlFor="email">Email</label>
                     <InputText type="email" 
                       className={classNames({ 'p-invalid': errors.email && touched.email && errors.email })}
                       name="email" onChange={handleChange} onBlur={handleBlur} value={values.email} />
                       <small color='red'>{errors.email && touched.email && errors.email}</small>
                   </div>
                   <div className="flex flex-column gap-2">
-                    <label htmlFor='password'>Password</label>
+                    <label className='info' htmlFor='password'>Password</label>
                     <InputText
                       type="password"
                       name="password"
