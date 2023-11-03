@@ -1,4 +1,4 @@
-// import './Home.css';
+import './Home.css';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from "react";
 import { Calendar } from 'primereact/calendar';
@@ -123,8 +123,8 @@ function Home() {
               const result = await addPatientToEvent(values, values.eventId);
               console.log(result.id);
               setSubmitting(false);
-            }}
-        >
+            }}>
+              
           {({
             values,
             errors,
@@ -136,16 +136,6 @@ function Home() {
             /* and other goodies */
           }) => (
             <form onSubmit={handleSubmit} className="flex flex-column">
-              <div className="textbox-containter flex flex-column">
-                <div className="label">Select Appointment Date *</div>
-                <SelectButton unselectable={false} value={values.eventId} onChange={handleChange} name="eventId" optionLabel="date" options={events.map((e: any) => {
-                  return {
-                    'name': e.name,
-                    'value': e.id,
-                    'date': e.date.toDateString()
-                  };
-                })} />
-              </div>
               <div className="textbox-container flex flex-column">
                 <div className="label">First Name</div>
                 <InputText keyfilter="alpha" type="text" name="firstName" placeholder="First Name" 
@@ -225,8 +215,19 @@ function Home() {
               </div>
               <div className="patient flex flex-column">
                 <div className="label">Are you a new patient?</div>
+                
                 <Dropdown name="newPatient" value={patient} onChange={(e) => setPatient(e.value)} options={patientValid} placeholder="Select One" />
               </div>
+              <div className="textbox-containter flex flex-column align-center">
+                <div className="label">Select Appointment Date *</div>
+              
+              <SelectButton unselectable={false} value={values.eventId} onChange={handleChange} name="eventId" optionLabel="date" options={events.map((e: any) => {
+                  return {
+                    'name': e.name,
+                    'value': e.id,
+                    'date': e.date.toDateString()
+                  };
+                })} /></div>
               <div className="p-4">
                 <Button label="Reserve a spot" type="submit" className="w-12" disabled={isSubmitting}></Button>
               </div>

@@ -41,4 +41,17 @@ h1 {
   text-align: center;
 }
 
+.label {
+  color: black;
+}
 
+.check {
+  color: black;
+}
+
+.align-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
