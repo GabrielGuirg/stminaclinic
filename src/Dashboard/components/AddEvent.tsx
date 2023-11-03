@@ -13,7 +13,7 @@ function AddEvent() {
     return (
         <div>
             <Formik
-              initialValues={{ name: '', desiredAttendance: 10, isBehavioral: false }}
+              initialValues={{  desiredAttendance: 10, isBehavioral: false }}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
                 await addEvent(values);
@@ -25,11 +25,6 @@ function AddEvent() {
               {props => (
                 <Form>
                   <div>
-                    <label className="content">Title *</label>
-                    <div className="card flex justify-content-center">
-                      <Field type="text" name="name" as={InputText} />
-                    </div>
-                    <ErrorMessage name="name" component="div" className="feedback" />
 
                     <label className="content">Desired Attendance *</label>
                     <div className="card flex justify-content-center">

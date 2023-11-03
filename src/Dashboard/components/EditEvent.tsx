@@ -5,15 +5,18 @@ import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
 import { generalStore } from "../../stores/generalStore";
 
-function EditEvent() {
+function EditEvent(props: {eventId: string, desiredAttendence: number, isBehavioral: boolean, date: Date}) {
 
     const popSideBar = generalStore((state: any) => state.popSideBar);
     const addEvent = generalStore((state: any) => state.addEvent);
+    console.log(props.eventId);
+
+    // in general store write the update event func and inside it getEvents and close sidebar and toast
 
     return (
         <div>
             <Formik
-              initialValues={{ name: '', desiredAttendance: 10, isBehavioral: false }}
+              initialValues={{ desiredAttendance: props.desiredAttendence, isBehavioral: props.isBehavioral, date: props.date }}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
                 await addEvent(values);
@@ -22,18 +25,14 @@ function EditEvent() {
                 console.log(values);
               }}
             >
-              {props => (
+              {({
+                values
+              }) => (
                 <Form>
                   <div>
-                    <label className="content">Title *</label>
-                    <div className="card flex justify-content-center">
-                      <Field type="text" name="name" as={InputText} />
-                    </div>
-                    <ErrorMessage name="name" component="div" className="feedback" />
-
                     <label className="content">Desired Attendance *</label>
                     <div className="card flex justify-content-center">
-                      <Field type="number" name="desiredAttendance" as={InputText} />
+                      <Field type="number" value={values.desiredAttendance} name="desiredAttendance" as={InputText} />
                     </div>
                     <ErrorMessage name="desiredAttendance" component="div" className="feedback" />
 
@@ -45,7 +44,7 @@ function EditEvent() {
                     <div className="card flex">
                       <Checkbox
                         name="isBehavioral"
-                        checked={props.values.isBehavioral}
+                        checked={values.isBehavioral}
                       />
                       <label className='BehavioralEvent'>Behavioral Health Event</label>
                     </div>
