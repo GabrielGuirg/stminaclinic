@@ -44,6 +44,8 @@ function Home() {
   useEffect(() => {
     if (events.length > 0) {
       setDefaultEventId(events[0].id);
+    } else {
+      setDefaultEventId(null);
     }
     setIsMainPageLoading(false);
   }, [events]);

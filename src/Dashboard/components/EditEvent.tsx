@@ -8,7 +8,7 @@ import { generalStore } from "../../stores/generalStore";
 function EditEvent(props: {eventId: string, desiredAttendence: number, isBehavioral: boolean, date: Date}) {
 
     const popSideBar = generalStore((state: any) => state.popSideBar);
-    const addEvent = generalStore((state: any) => state.addEvent);
+    const updateEvent = generalStore((state: any) => state.updateEvent);
     console.log(props.eventId);
 
     // in general store write the update event func and inside it getEvents and close sidebar and toast
@@ -19,14 +19,16 @@ function EditEvent(props: {eventId: string, desiredAttendence: number, isBehavio
               initialValues={{ desiredAttendance: props.desiredAttendence, isBehavioral: props.isBehavioral, date: props.date }}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
-                await addEvent(values);
+                await updateEvent(props.eventId, values);
                 actions.setSubmitting(false);
                 popSideBar();
                 console.log(values);
               }}
             >
               {({
-                values
+                values,
+                handleChange,
+                handleBlur
               }) => (
                 <Form>
                   <div>
@@ -44,6 +46,8 @@ function EditEvent(props: {eventId: string, desiredAttendence: number, isBehavio
                     <div className="card flex">
                       <Checkbox
                         name="isBehavioral"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         checked={values.isBehavioral}
                       />
                       <label className='BehavioralEvent'>Behavioral Health Event</label>

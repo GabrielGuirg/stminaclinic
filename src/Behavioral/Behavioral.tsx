@@ -34,7 +34,7 @@ function Behavioral() {
   ];
 
   
-  const getOpenEvents = generalStore((state: any) => state.getOpenEvents);
+  const getOpenEvents = generalStore((state: any) => state.getOpenEventsBehavioval);
   const events = generalStore((state: any) => state.events);
 
   useEffect(() => {
@@ -44,6 +44,8 @@ function Behavioral() {
   useEffect(() => {
     if (events.length > 0) {
       setDefaultEventId(events[0].id);
+    } else {
+      setDefaultEventId(null);
     }
     setIsMainPageLoading(false);
   }, [events]);
@@ -120,7 +122,7 @@ function Behavioral() {
                 
             onSubmit={async (values, { setSubmitting }) => {
               console.log(values);
-              const result = await addPatientToEvent(values, values.eventId);
+              const result = await addPatientToEvent(values, values.eventId, true);
               console.log(result.id);
               setSubmitting(false);
             }}

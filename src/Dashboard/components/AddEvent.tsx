@@ -40,6 +40,8 @@ function AddEvent() {
                     <div className="card flex">
                       <Checkbox
                         name="isBehavioral"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
                         checked={props.values.isBehavioral}
                       />
                       <label className='BehavioralEvent'>Behavioral Health Event</label>

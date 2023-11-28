@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, or, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { ToastMessage } from 'primereact/toast'
 import { create } from 'zustand'
 import { firebaseApp } from '../library/common';
@@ -17,6 +17,7 @@ export const generalStore = create((set, get: any) => ({
   sideBars: [],
   sideBarOpen: false,
   sideBarLength: 0,
+  patients: [],
   sendToasts: (allToasts: ToastMessage[]) => {
     set((state: any) => ({
         ...state, // state here expands states
@@ -36,25 +37,54 @@ export const generalStore = create((set, get: any) => ({
     }));
     const db = getFirestore(firebaseApp);
     const docRef = collection(db, "events");
-    const res = await addDoc(docRef, val);
+    const res = await addDoc(docRef, {
+      ...val,
+      "closed": false
+    });
     set((state: any) => ({
         ...state,
         appLoading: false
     }));
     get().getEvents();
   },
-  addPatientToEvent: async (val: any, eventId: string) => {
+  updateEvent: async (eventId: string, val: {desiredAttendance: number, isBehavioral: boolean, date: Date, closed: boolean}) => {
+    get().setLoading(true);
+    const db = getFirestore(firebaseApp);
+    const docEventRef = collection(db, `events`);
+    const resEvent = await doc(docEventRef, eventId);
+    await updateDoc(resEvent, val);
+    get().setLoading(false);
+    await get().getEvents();
+  },
+
+  updatePatient: async (eventId: string, patientID: string, eventType: string, payload: any) => {
+    get().setLoading(true);
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, `${eventType}/${eventId}/patients`);
+    const refPatient = await doc(docRef, patientID);
+    await updateDoc(refPatient, payload);
+    await get().getPatientsByEventId(eventId);
+  },
+
+  deletePatient: async (eventId: string, patientID: string, eventType: string) => {
+    get().setLoading(true);
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, `${eventType}/${eventId}/patients`);
+    const refPatient = await doc(docRef, patientID);
+    await deleteDoc(refPatient);
+    await get().getPatientsByEventId(eventId);
+  },
+
+  addPatientToEvent: async (val: any, eventId: string, isBehavioral: boolean = false) => {
     set((state: any) => ({
       ...state,
       appLoading: true
     }));
     const db = getFirestore(firebaseApp);
-    const docRef = collection(db, `clinic/${eventId}/patients`);
+    const docRef = collection(db, `${isBehavioral ? 'behavioral' : 'clinic'}/${eventId}/patients`);
     const res = await addDoc(docRef, val);
-    console.log(res);
-    console.log(res.id);
     if (res.id) {
-      await get().calcEventPatient('clinic', eventId);
+      await get().calcEventPatient(isBehavioral ? 'behavioral' : 'clinic', eventId);
       get().sendToasts([{
         severity: 'success',
         summary: 'Spot reserved! Thank you',
@@ -111,7 +141,34 @@ export const generalStore = create((set, get: any) => ({
   getOpenEvents: async () => {
     const db = getFirestore(firebaseApp);
     const docRef = collection(db, "events");
-    const res = await getDocs(query(docRef));
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 5);
+    const res = await getDocs(query(docRef,
+       where("closed", "==", false), 
+       where("date", ">", currentDate),
+       where("isBehavioral", "==", false)
+    ));
+    set((state: any) => ({
+        ...state,
+        events: res.docs.map((n) => {
+            return {    
+                ...n.data(),
+                date: new Date(n.data().date.seconds * 1000),
+                id: n.id
+            }
+        })
+    }));
+  },
+  getOpenEventsBehavioval: async () => {
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, "events");
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 2);
+    const res = await getDocs(query(docRef, 
+      where("closed", "==", false), 
+      where("date", ">", currentDate),
+      where("isBehavioral", "==", true)
+    ));
     set((state: any) => ({
         ...state,
         events: res.docs.map((n) => {
@@ -183,5 +240,22 @@ export const generalStore = create((set, get: any) => ({
       }
     ));
     get().checkSideBar()
+  },
+  /// PATIENTS
+  getPatientsByEventId: async (eventId: string, type: string) => {
+    get().setLoading(true);
+    const db = getFirestore(firebaseApp);
+    const docRef = collection(db, `${type}/${eventId}/patients`);
+    const res = await getDocs(query(docRef, orderBy('firstName', 'asc'), orderBy('lastName', 'asc')));
+    set((state: any) => ({
+      ...state,
+      patients: res.docs.map((n) => {
+          return {
+              ...n.data(),
+              id: n.id
+          }
+      })
+    }));
+    get().setLoading(false);
   }
 }));
